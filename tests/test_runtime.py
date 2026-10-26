@@ -23,7 +23,9 @@ class SafetyTests(unittest.TestCase):
             root = Path(temp) / "root"
             root.mkdir()
             policy = PathPolicy([root])
-            self.assertEqual(policy.resolve("a/../b"), root / "b")
+            # Windows TemporaryDirectory may use an 8.3 alias (RUNNER~1).
+            # Compare canonical paths on both sides; preserve the escape checks.
+            self.assertEqual(policy.resolve("a/../b"), (root / "b").resolve())
             with self.assertRaises(SafetyError):
                 policy.resolve("../escape")
             outside = Path(temp) / "outside"
