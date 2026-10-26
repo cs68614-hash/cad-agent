@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "automotive-catia": {
+      "command": "C:\\tools\\automotive-catia-mcp\\.venv\\Scripts\\python.exe",
+      "args": ["-m", "automotive_catia", "--transport", "stdio", "--workspace", "C:\\CATIA_MCP_Work"]
+    }
+  }
+}

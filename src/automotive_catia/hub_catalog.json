@@ -1,0 +1,2520 @@
+[
+  {
+    "name": "hub__catia_health_check",
+    "description": "Inspect CATIA installations, COM registration and Analysis typelib without launching CATIA.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_health_check"
+  },
+  {
+    "name": "hub__catia_operation_status",
+    "description": "Return serialized COM worker state without entering the queue.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_operation_status"
+  },
+  {
+    "name": "hub__catia_connect",
+    "description": "Attach to CATIA; explicitly opt in to launching the selected configured V5 environment.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "start_if_missing": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_connect"
+  },
+  {
+    "name": "hub__catia_list_documents",
+    "description": "List open CATIA documents and their native document kinds.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_list_documents"
+  },
+  {
+    "name": "hub__catia_create_part",
+    "description": "Create a new native CATPart document.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "default": "Part"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_part"
+  },
+  {
+    "name": "hub__catia_create_product",
+    "description": "Create a new native CATProduct assembly document.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "default": "Product"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_product"
+  },
+  {
+    "name": "hub__catia_open_document",
+    "description": "Open a CATIA/native exchange document inside configured allowed roots.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_open_document"
+  },
+  {
+    "name": "hub__catia_save_active",
+    "description": "Save active document, optionally SaveAs to a workspace-bounded native path.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_save_active"
+  },
+  {
+    "name": "hub__catia_export_active",
+    "description": "Safely export through a unique temporary file, optional re-import validation and explicit overwrite policy.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "format_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "overwrite_policy": {
+          "type": "string",
+          "default": "error"
+        },
+        "verify_reimport": {
+          "type": "boolean",
+          "default": true
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_export_active"
+  },
+  {
+    "name": "hub__catia_create_sketch",
+    "description": "Create a native sketch from screened line/circle/rectangle/polyline entities.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "plane": {
+          "type": "string",
+          "default": "xy"
+        },
+        "body_name": {
+          "type": "string",
+          "default": "PartBody"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "entities"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_sketch"
+  },
+  {
+    "name": "hub__catia_surface_capabilities",
+    "description": "Probe live CATIA GSD/Part Design surface factories and documented quality-check limits.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_surface_capabilities"
+  },
+  {
+    "name": "hub__catia_create_geometrical_set",
+    "description": "Create or reuse a native CATIA geometrical set (HybridBody).",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_geometrical_set"
+  },
+  {
+    "name": "hub__catia_create_3d_points",
+    "description": "Create named native 3D coordinate points in a geometrical set; coordinates are millimetres.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "geometrical_set": {
+          "type": "string",
+          "default": "Wireframe"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "points"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_3d_points"
+  },
+  {
+    "name": "hub__catia_create_spline",
+    "description": "Create an open/closed 3D spline through named points with optional G1/G2 curve constraints.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "point_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "closed": {
+          "type": "boolean",
+          "default": false
+        },
+        "constraints": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": true
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "geometrical_set": {
+          "type": "string",
+          "default": "Wireframe"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "point_names"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_spline"
+  },
+  {
+    "name": "hub__catia_create_offset_plane",
+    "description": "Create a native offset plane from XY/YZ/ZX or another named plane.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "base_plane": {
+          "type": "string"
+        },
+        "offset_mm": {
+          "type": "number"
+        },
+        "orientation": {
+          "type": "boolean",
+          "default": false
+        },
+        "geometrical_set": {
+          "type": "string",
+          "default": "Reference Geometry"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "base_plane",
+        "offset_mm"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_offset_plane"
+  },
+  {
+    "name": "hub__catia_create_connect_curve",
+    "description": "Create a native connect curve with independently selectable G0/G1/G2 end continuity.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "curve1_name": {
+          "type": "string"
+        },
+        "point1_name": {
+          "type": "string"
+        },
+        "curve2_name": {
+          "type": "string"
+        },
+        "point2_name": {
+          "type": "string"
+        },
+        "continuity1": {
+          "type": "string",
+          "default": "g1"
+        },
+        "continuity2": {
+          "type": "string",
+          "default": "g1"
+        },
+        "tension1": {
+          "type": "number",
+          "default": 1.0
+        },
+        "tension2": {
+          "type": "number",
+          "default": 1.0
+        },
+        "orientation1": {
+          "type": "integer",
+          "default": 1
+        },
+        "orientation2": {
+          "type": "integer",
+          "default": 1
+        },
+        "trim": {
+          "type": "boolean",
+          "default": false
+        },
+        "geometrical_set": {
+          "type": "string",
+          "default": "Wireframe"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "curve1_name",
+        "point1_name",
+        "curve2_name",
+        "point2_name"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_connect_curve"
+  },
+  {
+    "name": "hub__catia_create_loft",
+    "description": "Create native HybridShapeLoft with ordered sections, guides, coupling and closing points.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "section_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "guide_names": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "closing_point_names": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "section_orientations": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "integer"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "coupling": {
+          "type": "string",
+          "default": "ratio"
+        },
+        "context": {
+          "type": "string",
+          "default": "surface"
+        },
+        "start_tangent_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "end_tangent_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "smooth_angle_deg": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "smooth_deviation_mm": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "geometrical_set": {
+          "type": "string",
+          "default": "Surfaces"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "section_names"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_loft"
+  },
+  {
+    "name": "hub__catia_create_fill",
+    "description": "Create a native Fill with one or more boundaries and optional G0/G1/G2 supports.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "boundary_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "support_names": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "continuities": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "constraints": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "geometrical_set": {
+          "type": "string",
+          "default": "Surfaces"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "boundary_names"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_fill"
+  },
+  {
+    "name": "hub__catia_join_surfaces",
+    "description": "Join native curves/surfaces with distance, angular, connexity and manifold controls.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "element_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tolerance_mm": {
+          "type": "number",
+          "default": 0.001
+        },
+        "angular_tolerance_deg": {
+          "type": "number",
+          "default": 0.5
+        },
+        "connex": {
+          "type": "boolean",
+          "default": true
+        },
+        "manifold": {
+          "type": "boolean",
+          "default": true
+        },
+        "simplify": {
+          "type": "boolean",
+          "default": true
+        },
+        "geometrical_set": {
+          "type": "string",
+          "default": "Surfaces"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "element_names"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_join_surfaces"
+  },
+  {
+    "name": "hub__catia_heal_surfaces",
+    "description": "Heal native surfaces with G0/G1, distance, merging and angular objectives.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "body_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "continuity": {
+          "type": "string",
+          "default": "g1"
+        },
+        "distance_objective_mm": {
+          "type": "number",
+          "default": 0.001
+        },
+        "merging_distance_mm": {
+          "type": "number",
+          "default": 0.001
+        },
+        "tangency_angle_deg": {
+          "type": "number",
+          "default": 0.5
+        },
+        "sharpness_angle_deg": {
+          "type": "number",
+          "default": 0.5
+        },
+        "geometrical_set": {
+          "type": "string",
+          "default": "Surfaces"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "body_names"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_heal_surfaces"
+  },
+  {
+    "name": "hub__catia_create_boundary",
+    "description": "Create the complete boundary curve of a named surface.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "surface_name": {
+          "type": "string"
+        },
+        "geometrical_set": {
+          "type": "string",
+          "default": "Wireframe"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "surface_name"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_boundary"
+  },
+  {
+    "name": "hub__catia_close_surface",
+    "description": "Close a named surface into a native Part Design solid feature.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "surface_name": {
+          "type": "string"
+        },
+        "body_name": {
+          "type": "string",
+          "default": "PartBody"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "surface_name"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_close_surface"
+  },
+  {
+    "name": "hub__catia_thick_surface",
+    "description": "Thicken a named surface into a native Part Design solid feature.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "surface_name": {
+          "type": "string"
+        },
+        "top_offset_mm": {
+          "type": "number"
+        },
+        "bottom_offset_mm": {
+          "type": "number",
+          "default": 0.0
+        },
+        "reverse_direction": {
+          "type": "boolean",
+          "default": false
+        },
+        "body_name": {
+          "type": "string",
+          "default": "PartBody"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "name",
+        "surface_name",
+        "top_offset_mm"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_thick_surface"
+  },
+  {
+    "name": "hub__catia_check_surface_quality",
+    "description": "Update and measure named surfaces, report Join topology modes and requested minimum gaps.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "element_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gap_pairs": {
+          "anyOf": [
+            {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "element_names"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_check_surface_quality"
+  },
+  {
+    "name": "hub__catia_add_pad",
+    "description": "Create a native Part Design pad from an existing sketch.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sketch_name": {
+          "type": "string"
+        },
+        "length_mm": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string",
+          "default": "Pad"
+        },
+        "body_name": {
+          "type": "string",
+          "default": "PartBody"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "sketch_name",
+        "length_mm"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_add_pad"
+  },
+  {
+    "name": "hub__catia_add_pocket",
+    "description": "Create a native Part Design pocket, optionally reversing its extrusion direction.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "sketch_name": {
+          "type": "string"
+        },
+        "length_mm": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string",
+          "default": "Pocket"
+        },
+        "body_name": {
+          "type": "string",
+          "default": "PartBody"
+        },
+        "reverse": {
+          "type": "boolean",
+          "default": false
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "sketch_name",
+        "length_mm"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_add_pocket"
+  },
+  {
+    "name": "hub__catia_inspect_edges",
+    "description": "List one-based solid edges in a named body or named source feature.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "body_name": {
+          "type": "string",
+          "default": "PartBody"
+        },
+        "source_feature_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "limit": {
+          "type": "integer",
+          "default": 200
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_inspect_edges"
+  },
+  {
+    "name": "hub__catia_add_edge_fillet",
+    "description": "Create a native Part Design constant-radius fillet on inspected edge indices.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "edge_indices": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          }
+        },
+        "radius_mm": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string",
+          "default": "EdgeFillet"
+        },
+        "body_name": {
+          "type": "string",
+          "default": "PartBody"
+        },
+        "source_feature_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "propagation": {
+          "type": "string",
+          "default": "tangency"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "edge_indices",
+        "radius_mm"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_add_edge_fillet"
+  },
+  {
+    "name": "hub__catia_create_parametric_part",
+    "description": "Create and save a native block, cylinder or tube as CATPart.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "part_type": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "output_path": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string",
+          "default": "ParametricPart"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "part_type",
+        "parameters",
+        "output_path"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_parametric_part"
+  },
+  {
+    "name": "hub__catia_add_components",
+    "description": "Insert existing component files into the active CATProduct.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "paths"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_add_components"
+  },
+  {
+    "name": "hub__catia_list_materials",
+    "description": "List CATIA material families/materials from an allowed or installed CATMaterial catalog.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "catalog_path": {
+          "type": "string"
+        },
+        "family_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "limit": {
+          "type": "integer",
+          "default": 500
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "catalog_path"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_list_materials"
+  },
+  {
+    "name": "hub__catia_apply_material",
+    "description": "Apply a native CATIA material to active CATPart/CATProduct; required for physical Analysis.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "catalog_path": {
+          "type": "string"
+        },
+        "family_name": {
+          "type": "string"
+        },
+        "material_name": {
+          "type": "string"
+        },
+        "link_mode": {
+          "type": "integer",
+          "default": 1
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "catalog_path",
+        "family_name",
+        "material_name"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_apply_material"
+  },
+  {
+    "name": "hub__catia_update_active",
+    "description": "Update the active CATPart or CATProduct.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_update_active"
+  },
+  {
+    "name": "hub__catia_inspect_active",
+    "description": "Inspect active document metadata, native bodies/features or assembly components.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "include_parameters": {
+          "type": "boolean",
+          "default": false
+        },
+        "limit": {
+          "type": "integer",
+          "default": 200
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_inspect_active"
+  },
+  {
+    "name": "hub__catia_list_parameters",
+    "description": "List bounded native CATPart parameters.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "default": 200
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_list_parameters"
+  },
+  {
+    "name": "hub__catia_set_parameter",
+    "description": "Set a named CATIA parameter using a unit-bearing expression such as '25 mm'.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "parameter_name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        },
+        "update": {
+          "type": "boolean",
+          "default": true
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "parameter_name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_set_parameter"
+  },
+  {
+    "name": "hub__catia_capture_view",
+    "description": "Fit and capture the active CATIA viewer to a workspace-bounded BMP file.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_capture_view"
+  },
+  {
+    "name": "hub__catia_close_active",
+    "description": "Close active document; optional expected name prevents closing the wrong UI document.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "save": {
+          "type": "boolean",
+          "default": false
+        },
+        "discard_unsaved": {
+          "type": "boolean",
+          "default": false
+        },
+        "expected_document_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_close_active"
+  },
+  {
+    "name": "hub__catia_analysis_catalog",
+    "description": "Return native CATIA Analysis identifiers plus methods detected in the installed typelib.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_analysis_catalog"
+  },
+  {
+    "name": "hub__catia_create_analysis_document",
+    "description": "Create CATAnalysis, import an open CATPart/CATProduct and optionally create a native case.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "source_document_name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "case_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "analysis_name": {
+          "type": "string",
+          "default": "Analysis"
+        },
+        "output_path": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_analysis_document"
+  },
+  {
+    "name": "hub__catia_inspect_analysis",
+    "description": "Inspect active CATAnalysis models, cases, sets, entities, supports, mesh parts and images.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "default": 200
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_inspect_analysis"
+  },
+  {
+    "name": "hub__catia_add_analysis_case",
+    "description": "Add a native CATIA Analysis case using its installed late-type identifier.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "case_type": {
+          "type": "string"
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "case_type"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_add_analysis_case"
+  },
+  {
+    "name": "hub__catia_run_analysis_transition",
+    "description": "Run a fixed-name CATIA Analysis workbench transition for installed advanced modules.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "transition_name": {
+          "type": "string"
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "transition_name"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_run_analysis_transition"
+  },
+  {
+    "name": "hub__catia_add_analysis_solution",
+    "description": "Add a native solution definition to an existing CATIA Analysis case.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "solution_type": {
+          "type": "string"
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "case_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "solution_type"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_add_analysis_solution"
+  },
+  {
+    "name": "hub__catia_add_analysis_set",
+    "description": "Add a native Analysis set without restricting installed module-specific set types.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "set_type": {
+          "type": "string"
+        },
+        "set_kind": {
+          "type": "string",
+          "default": "in"
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "case_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "scope": {
+          "type": "string",
+          "default": "case"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "set_type"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_add_analysis_set"
+  },
+  {
+    "name": "hub__catia_add_analysis_entity",
+    "description": "Add a native load/restraint/property entity by CATIA late type, then return its components.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "entity_type": {
+          "type": "string"
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "case_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "scope": {
+          "type": "string",
+          "default": "case"
+        },
+        "set_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "set_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "entity_type"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_add_analysis_entity"
+  },
+  {
+    "name": "hub__catia_set_analysis_entity_value",
+    "description": "Set a native CATIA Analysis entity component value through AnalysisEntity.SetValue.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "component": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "case_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "scope": {
+          "type": "string",
+          "default": "case"
+        },
+        "set_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "set_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "entity_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "line_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "column_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "layer_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "component",
+        "label",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_set_analysis_entity_value"
+  },
+  {
+    "name": "hub__catia_add_analysis_mesh_part",
+    "description": "Add a native CATIA mesh part by installed late type; module-specific types remain available.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "mesh_type": {
+          "type": "string"
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "mesh_type"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_add_analysis_mesh_part"
+  },
+  {
+    "name": "hub__catia_set_analysis_mesh_specification",
+    "description": "Set an installed mesh-part global specification, such as size or sag.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "specification_name": {
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "anyOf": [
+                {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "integer"
+                    }
+                  ]
+                },
+                {
+                  "type": "number"
+                }
+              ]
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "mesh_part_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "update": {
+          "type": "boolean",
+          "default": true
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "specification_name",
+        "value"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_set_analysis_mesh_specification"
+  },
+  {
+    "name": "hub__catia_bind_analysis_mesh_support",
+    "description": "Bind a native CATIA mesh part to source geometry found by Selection.Search.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "source_document_name": {
+          "type": "string"
+        },
+        "search_query": {
+          "type": "string"
+        },
+        "selection_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "mesh_part_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "source_document_name",
+        "search_query"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_bind_analysis_mesh_support"
+  },
+  {
+    "name": "hub__catia_bind_analysis_support",
+    "description": "Bind an Analysis entity to source geometry found by CATIA Selection.Search.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "source_document_name": {
+          "type": "string"
+        },
+        "search_query": {
+          "type": "string"
+        },
+        "selection_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "case_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "scope": {
+          "type": "string",
+          "default": "case"
+        },
+        "set_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "set_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "entity_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "source_document_name",
+        "search_query"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_bind_analysis_support"
+  },
+  {
+    "name": "hub__catia_compute_analysis",
+    "description": "Run CATIA's internal Analysis/ELFINI compute for one case; no external solver is used.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "case_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "mesh_only": {
+          "type": "boolean",
+          "default": false
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_compute_analysis"
+  },
+  {
+    "name": "hub__catia_create_analysis_result_image",
+    "description": "Create and update a CATIA-native post-processing image by installed image type.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "image_type": {
+          "type": "string"
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "case_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "scope": {
+          "type": "string",
+          "default": "case"
+        },
+        "set_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "set_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "hide_existing_images": {
+          "type": "boolean",
+          "default": true
+        },
+        "show_mesh": {
+          "type": "boolean",
+          "default": false
+        },
+        "duplicate": {
+          "type": "boolean",
+          "default": false
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "image_type"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_create_analysis_result_image"
+  },
+  {
+    "name": "hub__catia_export_analysis_result_data",
+    "description": "Export numerical data from a CATIA Analysis result image into a bounded folder.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "folder": {
+          "type": "string"
+        },
+        "file_name": {
+          "type": "string"
+        },
+        "extension_type": {
+          "type": "string"
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "case_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "scope": {
+          "type": "string",
+          "default": "case"
+        },
+        "set_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "set_index": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "image_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "folder",
+        "file_name",
+        "extension_type"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_export_analysis_result_data"
+  },
+  {
+    "name": "hub__catia_build_analysis_report",
+    "description": "Build CATIA's native HTML Analysis report and inventory produced artifacts.",
+    "inputSchema": {
+      "type": "object",
+      "properties": {
+        "folder": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "model_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "case_index": {
+          "type": "integer",
+          "default": 1
+        },
+        "add_created_images": {
+          "type": "boolean",
+          "default": true
+        },
+        "request_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        }
+      },
+      "required": [
+        "folder",
+        "title"
+      ],
+      "additionalProperties": false
+    },
+    "source": "Cai-aa/CAD-Agent-Hub",
+    "source_name": "catia_build_analysis_report"
+  }
+]
