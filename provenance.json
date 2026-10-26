@@ -1,0 +1,152 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "id": "daiemon",
+      "repository": "daiemon12/catia-v5-mcp-server",
+      "commit": "e8b9425e690bd09c7c6b1aeee0a913eedb16588f",
+      "license": "MIT",
+      "files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha": "53d98f0a2b6bd3286412d9923919e821d0bce021"
+        },
+        {
+          "path": "catia_mcp/__init__.py",
+          "git_blob_sha": "ac9f61927da2b819a4b5fcc5e584cb790774beeb"
+        },
+        {
+          "path": "catia_mcp/__main__.py",
+          "git_blob_sha": "abb190449ab3d56c66f94a1913df79ff442377a4"
+        },
+        {
+          "path": "catia_mcp/connection.py",
+          "git_blob_sha": "2c509dd835249a4230a2a13ea3369ca48a156348"
+        },
+        {
+          "path": "catia_mcp/http_transport.py",
+          "git_blob_sha": "930b280a2ab5408fd04bfc2788ad41fab9001dec"
+        },
+        {
+          "path": "catia_mcp/results.py",
+          "git_blob_sha": "9836d2913aaa636e449ef288cd3486afb92e0bc4"
+        },
+        {
+          "path": "catia_mcp/server.py",
+          "git_blob_sha": "1166403cb87c28c0e0ede7c2882432fab4a8f8b5"
+        },
+        {
+          "path": "catia_mcp/tools/__init__.py",
+          "git_blob_sha": "c5267bcb8832830d54706cd7251bb8a463d00903"
+        },
+        {
+          "path": "catia_mcp/tools/assembly.py",
+          "git_blob_sha": "ce551f4252843d252587dfd6a8585a7fe7bc8039"
+        },
+        {
+          "path": "catia_mcp/tools/diagnostics.py",
+          "git_blob_sha": "b91cdf95d0800d6b838960d66f9b6aba98c27255"
+        },
+        {
+          "path": "catia_mcp/tools/document.py",
+          "git_blob_sha": "1e991f8f35a8f97a42f21addc6c85e4b7ebeb6e1"
+        },
+        {
+          "path": "catia_mcp/tools/drawing.py",
+          "git_blob_sha": "85c1f622f737dac8da6e8837486303d592b16be3"
+        },
+        {
+          "path": "catia_mcp/tools/export.py",
+          "git_blob_sha": "d21b1b3e4738cd42d0407b1fa26dc3ec5d42df42"
+        },
+        {
+          "path": "catia_mcp/tools/gsd.py",
+          "git_blob_sha": "9a6e250263d2574c1b1c84208c1a55c2a615da19"
+        },
+        {
+          "path": "catia_mcp/tools/knowledge.py",
+          "git_blob_sha": "136e31917289501fce30b1ac0f224605c2a4fcd0"
+        },
+        {
+          "path": "catia_mcp/tools/measurement.py",
+          "git_blob_sha": "f3dbe88a07bfce77c02eed5f4d9464fe04e24abc"
+        },
+        {
+          "path": "catia_mcp/tools/part_design.py",
+          "git_blob_sha": "2909ae078d85285a1e99dadbf1b27f759e52e432"
+        },
+        {
+          "path": "catia_mcp/tools/sketcher.py",
+          "git_blob_sha": "3e4077afc0f6b7a8e9e0f15e5c1e6fa2ae46288f"
+        }
+      ],
+      "modifications": [
+        "Absolute catia_mcp imports namespaced under automotive_catia.vendor.daiemon",
+        "Upstream servers never instantiated; shared application adapters used"
+      ]
+    },
+    {
+      "id": "hub",
+      "repository": "Cai-aa/CAD-Agent-Hub",
+      "commit": "339840b5f775e81d0b18519806ccb5e59885e2a6",
+      "license": "MIT",
+      "files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha": "28a15b62caf31846df46043e2095a3f8a295b9a1"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/__init__.py",
+          "git_blob_sha": "6786e56a45da669f56da50cdc1fc92aaf10ee3d7"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/com_runtime.py",
+          "git_blob_sha": "077ea28569760bc72d17d04429e7edf73a374985"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/compatibility.py",
+          "git_blob_sha": "2801fdf7f253c0f91229cf09aa02fb63dfa1bfca"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/config.py",
+          "git_blob_sha": "9e854a3718358ac7d996f2629218e191d12cd566"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/contracts.py",
+          "git_blob_sha": "804eaabd253001422b06278175e708eee2c72c3c"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/executor.py",
+          "git_blob_sha": "fe84895d5e13ac035fce86a3154cb8e2d0a2379a"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/modeling.py",
+          "git_blob_sha": "dd2ebcecb224e64110db54f094c8aba388aea257"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/server.py",
+          "git_blob_sha": "3e48bcfd6ae70eb34d7bfc6cfabb74a2bf5e1bc4"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/simulation.py",
+          "git_blob_sha": "d3abc87421dc297719c2cc33ee8b0fc6732ff7bf"
+        },
+        {
+          "path": "MCP/CATIA/src/catia_mcp/surfaces.py",
+          "git_blob_sha": "08a788df9e1fb9c165ce6792e69c221d37c86eb9"
+        }
+      ],
+      "modifications": [
+        "Absolute catia_mcp imports namespaced under automotive_catia.vendor.hub",
+        "Upstream servers never instantiated; shared application adapters used"
+      ]
+    }
+  ],
+  "excluded": [
+    {
+      "repository": "chenlei-gh/mcp-catia",
+      "commit": "faf84686df16e1e4e4055e288eb73e509d3d03e3",
+      "reason": "No LICENSE at reviewed pin; no source copied. Boolean/batch/history concepts are roadmap, not claimed implemented."
+    }
+  ]
+}

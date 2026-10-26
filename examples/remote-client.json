@@ -1,0 +1,6 @@
+{
+  "_note": "Configuration semantics only; adapt to your client's schema and secure credential mechanism.",
+  "transport": "streamable-http",
+  "url": "https://catia.example.internal/mcp",
+  "headers": {"Authorization": "Bearer ${AUTO_CATIA_TOKEN}"}
+}

@@ -1,0 +1,1555 @@
+{
+  "source_entries": 153,
+  "enabled_source_entries": 144,
+  "disabled_source_entries": 9,
+  "native_control_tools": 6,
+  "unique_registered_names": 159,
+  "not_distinct_capabilities": true,
+  "tools": [
+    {
+      "tool": "daiemon__catia_add_component",
+      "source": "daiemon",
+      "domain": "assembly",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_add_new_part",
+      "source": "daiemon",
+      "domain": "assembly",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_fix_constraint",
+      "source": "daiemon",
+      "domain": "assembly",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_coincidence_constraint",
+      "source": "daiemon",
+      "domain": "assembly",
+      "enabled": false,
+      "disabled_reason": "Upstream ignores element1/element2; geometric binding not implemented.",
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_offset_constraint",
+      "source": "daiemon",
+      "domain": "assembly",
+      "enabled": false,
+      "disabled_reason": "Geometric reference binding requires live validation; component-level fallback disabled.",
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_angle_constraint",
+      "source": "daiemon",
+      "domain": "assembly",
+      "enabled": false,
+      "disabled_reason": "Geometric reference binding requires live validation.",
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_move_component",
+      "source": "daiemon",
+      "domain": "assembly",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_list_components",
+      "source": "daiemon",
+      "domain": "assembly",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_list_constraints",
+      "source": "daiemon",
+      "domain": "assembly",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_diagnose",
+      "source": "daiemon",
+      "domain": "diagnostics",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_connect",
+      "source": "daiemon",
+      "domain": "document",
+      "enabled": false,
+      "disabled_reason": "Use auto_connect: attach only, no automatic application launch.",
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_disconnect",
+      "source": "daiemon",
+      "domain": "document",
+      "enabled": false,
+      "disabled_reason": "Shared connection lifecycle is server-owned.",
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_new_part",
+      "source": "daiemon",
+      "domain": "document",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_new_product",
+      "source": "daiemon",
+      "domain": "document",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_open_document",
+      "source": "daiemon",
+      "domain": "document",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_save_document",
+      "source": "daiemon",
+      "domain": "document",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_close_document",
+      "source": "daiemon",
+      "domain": "document",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_list_documents",
+      "source": "daiemon",
+      "domain": "document",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_get_active_document_info",
+      "source": "daiemon",
+      "domain": "document",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_new_drawing",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_list_view_geometry",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_add_dimension",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_generate_dimensions",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_list_dimensions",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_projection_view",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_section_view",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_detail_view",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_add_text",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_add_table",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_drawing_add_view",
+      "source": "daiemon",
+      "domain": "drawing",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_export",
+      "source": "daiemon",
+      "domain": "export",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_screenshot",
+      "source": "daiemon",
+      "domain": "export",
+      "enabled": false,
+      "disabled_reason": "Upstream dimensions/format claims unverified; prefer hub screenshot BMP.",
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_set_view",
+      "source": "daiemon",
+      "domain": "export",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_fit_all",
+      "source": "daiemon",
+      "domain": "export",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_create_geoset",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_set_active_geoset",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_list_elements",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_point",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_line",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_plane_offset",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_plane_3points",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_spline",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_circle",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_project",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_intersection",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_multi_section_surface",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_sweep",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_extrude",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_revolve",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_fill",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_blend",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_offset_surface",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_join",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_split",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_trim",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_symmetry",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_thick_surface",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_gsd_close_surface",
+      "source": "daiemon",
+      "domain": "gsd",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_create_parameter",
+      "source": "daiemon",
+      "domain": "knowledge",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_set_formula",
+      "source": "daiemon",
+      "domain": "knowledge",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_list_relations",
+      "source": "daiemon",
+      "domain": "knowledge",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_delete_relation",
+      "source": "daiemon",
+      "domain": "knowledge",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_create_design_table",
+      "source": "daiemon",
+      "domain": "knowledge",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_measure_distance",
+      "source": "daiemon",
+      "domain": "measurement",
+      "enabled": false,
+      "disabled_reason": "Upstream unit multiplier is unverified; use Hub quality data with documented units.",
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_get_inertia",
+      "source": "daiemon",
+      "domain": "measurement",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_get_bounding_box",
+      "source": "daiemon",
+      "domain": "measurement",
+      "enabled": false,
+      "disabled_reason": "Vertex sampling is not an exact surface bounding box.",
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_get_parameters",
+      "source": "daiemon",
+      "domain": "measurement",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_set_parameter",
+      "source": "daiemon",
+      "domain": "measurement",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_update_part",
+      "source": "daiemon",
+      "domain": "measurement",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_pad",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_pocket",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_shaft",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_groove",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_fillet",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_chamfer",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_hole",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_rect_pattern",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_circ_pattern",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_user_pattern",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_mirror",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_shell",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_draft",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_thickness",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_delete_feature",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_list_features",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_list_edges",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_list_faces",
+      "source": "daiemon",
+      "domain": "part_design",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_create_sketch",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_close_sketch",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_sketch_line",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_sketch_rectangle",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_sketch_centered_rectangle",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_sketch_circle",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_sketch_arc",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_sketch_spline",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_sketch_point",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_sketch_constraint",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "daiemon__catia_sketch_get_geometry",
+      "source": "daiemon",
+      "domain": "sketcher",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "representative point/offset/pocket/update mocked only",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_health_check",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_operation_status",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_connect",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": false,
+      "disabled_reason": "Use auto_connect: attach only.",
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_list_documents",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_part",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_product",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_open_document",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_save_active",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_export_active",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_sketch",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_surface_capabilities",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_geometrical_set",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_3d_points",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_spline",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_offset_plane",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_connect_curve",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_loft",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_fill",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_join_surfaces",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_heal_surfaces",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_boundary",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_close_surface",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_thick_surface",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_check_surface_quality",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_add_pad",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_add_pocket",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_inspect_edges",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_add_edge_fillet",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_parametric_part",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_add_components",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_list_materials",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_apply_material",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_update_active",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_inspect_active",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_list_parameters",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_set_parameter",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_capture_view",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_close_active",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "hub_modeling_surface",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_analysis_catalog",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_analysis_document",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_inspect_analysis",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_add_analysis_case",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_run_analysis_transition",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_add_analysis_solution",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_add_analysis_set",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_add_analysis_entity",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_set_analysis_entity_value",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_add_analysis_mesh_part",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_set_analysis_mesh_specification",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_bind_analysis_mesh_support",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_bind_analysis_support",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_compute_analysis",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_create_analysis_result_image",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_export_analysis_result_data",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    },
+    {
+      "tool": "hub__catia_build_analysis_report",
+      "source": "Cai-aa/CAD-Agent-Hub",
+      "domain": "analysis",
+      "enabled": true,
+      "disabled_reason": null,
+      "adapter_contract_test": "all Hub wrappers signature checked",
+      "geometry_test": "NOT_RUN",
+      "live_catia_test": "NOT_RUN"
+    }
+  ],
+  "recommended": {
+    "surface_points": "hub__catia_create_3d_points",
+    "surface_spline": "hub__catia_create_spline",
+    "surface_loft": "hub__catia_create_loft",
+    "surface_offset": "daiemon__catia_gsd_offset_surface",
+    "surface_trim": "daiemon__catia_gsd_trim",
+    "surface_join": "hub__catia_join_surfaces",
+    "surface_heal": "hub__catia_heal_surfaces",
+    "surface_quality": "hub__catia_check_surface_quality",
+    "surface_thicken": "hub__catia_thick_surface",
+    "safe_export": "hub__catia_export_active",
+    "pocket": "hub__catia_add_pocket",
+    "edge_fillet": "hub__catia_add_edge_fillet",
+    "screenshot_bmp": "hub__catia_capture_view"
+  }
+}

@@ -1,0 +1,1216 @@
+from __future__ import annotations
+
+import math
+import os
+import threading
+import uuid
+from datetime import datetime
+from pathlib import Path
+from typing import Any, Iterable
+
+from .contracts import (
+    ContractError,
+    require_choice,
+    require_finite,
+    require_index,
+    require_positive,
+    require_safe_name,
+    require_text,
+)
+
+
+CAT_CAPTURE_FORMAT_BMP = 4
+CAT_MINIMAL_FILLET_EDGE_PROPAGATION = 0
+CAT_TANGENCY_FILLET_EDGE_PROPAGATION = 1
+_FILLET_PROPAGATION_CODES = {
+    "minimal": CAT_MINIMAL_FILLET_EDGE_PROPAGATION,
+    "tangency": CAT_TANGENCY_FILLET_EDGE_PROPAGATION,
+}
+_EDGE_SEARCH_QUERIES = (
+    "Topology.CGMEdge,sel",
+    "Type=Topology.CGMEdge,sel",
+    "Topology.Edge,sel",
+    "Type=Topology.Edge,sel",
+)
+
+
+def _collection_items(collection: Any, limit: int = 500) -> Iterable[Any]:
+    count = min(int(collection.Count), limit)
+    for index in range(1, count + 1):
+        yield collection.Item(index)
+
+
+def _safe_attr(obj: Any, name: str, default: Any = None) -> Any:
+    try:
+        member = getattr(obj, name)
+        return member() if callable(member) else member
+    except Exception:
+        return default
+
+
+def _safe_property(obj: Any, name: str, default: Any = None) -> Any:
+    """Read a COM property without invoking dispatch objects that are callable in pywin32."""
+    try:
+        return getattr(obj, name)
+    except Exception:
+        return default
+
+
+def document_kind(document: Any) -> str:
+    name = str(_safe_attr(document, "Name", ""))
+    suffix = Path(name).suffix.casefold()
+    return {
+        ".catpart": "Part",
+        ".catproduct": "Product",
+        ".catdrawing": "Drawing",
+        ".catanalysis": "Analysis",
+    }.get(suffix, str(_safe_attr(document, "Type", "Unknown")))
+
+
+def active_document(app: Any) -> Any:
+    if int(app.Documents.Count) < 1:
+        raise RuntimeError("CATIA has no open document")
+    return app.ActiveDocument
+
+
+def active_part_document(app: Any) -> Any:
+    document = active_document(app)
+    if document_kind(document).casefold() != "part" and not hasattr(document, "Part"):
+        raise RuntimeError(f"active document is not a CATPart: {document.Name}")
+    return document
+
+
+def _body(part: Any, body_name: str) -> Any:
+    if body_name:
+        try:
+            return part.Bodies.Item(body_name)
+        except Exception as exc:
+            if body_name.casefold() not in {"partbody", "mainbody"}:
+                raise RuntimeError(f"body not found: {body_name}") from exc
+    try:
+        return part.MainBody
+    except Exception:
+        if int(part.Bodies.Count) > 0:
+            return part.Bodies.Item(1)
+        body = part.Bodies.Add()
+        try:
+            body.Name = body_name or "PartBody"
+        except Exception:
+            pass
+        return body
+
+
+def _sketch(part: Any, body_name: str, sketch_name: str) -> Any:
+    body = _body(part, body_name)
+    try:
+        return body.Sketches.Item(sketch_name)
+    except Exception as exc:
+        raise RuntimeError(f"sketch not found in {body.Name}: {sketch_name}") from exc
+
+
+def _shape(body: Any, shape_name: str) -> Any:
+    safe_name = require_safe_name(shape_name, "source_feature_name")
+    try:
+        return body.Shapes.Item(safe_name)
+    except Exception as exc:
+        for shape in _collection_items(body.Shapes):
+            if str(_safe_attr(shape, "Name", "")).casefold() == safe_name.casefold():
+                return shape
+        raise RuntimeError(f"feature not found in {body.Name}: {safe_name}") from exc
+
+
+def _plane(part: Any, plane_name: str) -> Any:
+    normalized = require_choice(plane_name, "plane", ("xy", "yz", "zx", "xz"))
+    if normalized == "xy":
+        return part.OriginElements.PlaneXY
+    if normalized == "yz":
+        return part.OriginElements.PlaneYZ
+    return part.OriginElements.PlaneZX
+
+
+def create_part(app: Any, title: str) -> dict[str, Any]:
+    title = require_safe_name(title, "title")
+    document = app.Documents.Add("Part")
+    part = document.Part
+    try:
+        part.PartNumber = title
+    except Exception:
+        pass
+    try:
+        document.Product.PartNumber = title
+    except Exception:
+        pass
+    try:
+        document.Name = title
+    except Exception:
+        pass
+    return {"document": document.Name, "kind": "Part", "part_number": title}
+
+
+def create_product(app: Any, title: str) -> dict[str, Any]:
+    title = require_safe_name(title, "title")
+    document = app.Documents.Add("Product")
+    product = document.Product
+    product.PartNumber = title
+    try:
+        product.Name = title
+    except Exception:
+        pass
+    return {"document": document.Name, "kind": "Product", "part_number": title}
+
+
+def open_document(app: Any, path: Path) -> dict[str, Any]:
+    document = app.Documents.Open(str(path))
+    return {
+        "document": document.Name,
+        "kind": document_kind(document),
+        "full_name": str(_safe_attr(document, "FullName", path)),
+    }
+
+
+def save_active(app: Any, path: Path | None = None) -> dict[str, Any]:
+    document = active_document(app)
+    if path is None:
+        document.Save()
+    else:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        document.SaveAs(str(path))
+    return {
+        "document": document.Name,
+        "full_name": str(_safe_attr(document, "FullName", path)),
+        "saved": bool(_safe_attr(document, "Saved", True)),
+    }
+
+
+_EXPORT_FORMATS = {
+    ".stp": "stp",
+    ".step": "stp",
+    ".igs": "igs",
+    ".iges": "igs",
+    ".stl": "stl",
+    ".3dxml": "3dxml",
+    ".model": "model",
+    ".cgr": "cgr",
+    ".pdf": "pdf",
+    ".dxf": "dxf",
+    ".dwg": "dwg",
+}
+
+# Long synonyms are accepted from callers for convenience, but CATIA
+# ExportData expects the canonical short names. Older releases such as
+# V5R21 reject "step"/"iges" outright, so normalize every resolved format.
+_EXPORT_FORMAT_ALIASES = {
+    "step": "stp",
+    "iges": "igs",
+}
+
+_EXPORT_POLICIES = ("error", "versioned", "replace")
+_REIMPORT_FORMATS = {"stp", "igs"}
+_EXPORT_GUARD = threading.Lock()
+_ACTIVE_EXPORTS: set[str] = set()
+
+
+def _export_key(document: Any) -> str:
+    full_name = str(_safe_attr(document, "FullName", "")).strip()
+    return full_name.casefold() if full_name else str(document.Name).casefold()
+
+
+def _reserve_export(document: Any) -> str:
+    key = _export_key(document)
+    with _EXPORT_GUARD:
+        if key in _ACTIVE_EXPORTS:
+            raise RuntimeError(
+                f"an export is already active for {document.Name}; "
+                "call catia_operation_status and do not retry until it is idle"
+            )
+        _ACTIVE_EXPORTS.add(key)
+    return key
+
+
+def _release_export(key: str) -> None:
+    with _EXPORT_GUARD:
+        _ACTIVE_EXPORTS.discard(key)
+
+
+def _unique_export_path(path: Path, marker: str) -> Path:
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    for index in range(1000):
+        suffix = "" if index == 0 else f"_{index:03d}"
+        candidate = path.with_name(
+            f"{path.stem}.{marker}_{timestamp}{suffix}{path.suffix}"
+        )
+        if not candidate.exists():
+            return candidate
+    raise RuntimeError(f"could not allocate a unique export path beside {path}")
+
+
+def _temporary_export_path(path: Path) -> Path:
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    token = uuid.uuid4().hex[:8]
+    return path.with_name(
+        f"{path.stem}.__exporting_{timestamp}_{token}{path.suffix}"
+    )
+
+
+def _validate_export_file(path: Path) -> dict[str, Any]:
+    if not path.is_file():
+        raise RuntimeError(f"CATIA export did not create a file: {path}")
+    size_bytes = path.stat().st_size
+    if size_bytes <= 0:
+        raise RuntimeError(f"CATIA export created an empty file: {path}")
+    return {"exists": True, "size_bytes": size_bytes}
+
+
+def _validate_export_reimport(
+    app: Any,
+    original_document: Any,
+    path: Path,
+    resolved_format: str,
+    verify_reimport: bool,
+) -> dict[str, Any]:
+    if not verify_reimport or resolved_format not in _REIMPORT_FORMATS:
+        return {
+            "performed": False,
+            "reason": (
+                "disabled"
+                if not verify_reimport
+                else f"re-import is not configured for {resolved_format}"
+            ),
+        }
+
+    imported_document = None
+    try:
+        app.Documents.Open(str(path))
+        imported_document = app.ActiveDocument
+        kind = document_kind(imported_document)
+        result: dict[str, Any] = {
+            "performed": True,
+            "document": str(imported_document.Name),
+            "kind": kind,
+        }
+        if hasattr(imported_document, "Part"):
+            part = imported_document.Part
+            bodies = int(part.Bodies.Count)
+            shapes = sum(
+                int(part.Bodies.Item(index).Shapes.Count)
+                for index in range(1, bodies + 1)
+            )
+            result.update(body_count=bodies, shape_count=shapes)
+            if bodies < 1 or shapes < 1:
+                raise RuntimeError(
+                    f"re-imported {path.name} contains no Part body geometry"
+                )
+        elif hasattr(imported_document, "Product"):
+            components = int(imported_document.Product.Products.Count)
+            result["component_count"] = components
+            if components < 1:
+                raise RuntimeError(
+                    f"re-imported {path.name} contains no Product components"
+                )
+        else:
+            raise RuntimeError(
+                f"re-imported {path.name} is not a CATPart or CATProduct"
+            )
+        result["passed"] = True
+        return result
+    finally:
+        try:
+            if imported_document is not None:
+                imported_document.Close()
+        finally:
+            original_document.Activate()
+
+
+def export_active(
+    app: Any,
+    path: Path,
+    format_name: str | None = None,
+    overwrite_policy: str = "error",
+    verify_reimport: bool = True,
+) -> dict[str, Any]:
+    document = active_document(app)
+    resolved_format = format_name.strip().lower() if format_name else _EXPORT_FORMATS.get(path.suffix.casefold())
+    if resolved_format:
+        resolved_format = _EXPORT_FORMAT_ALIASES.get(resolved_format, resolved_format)
+    if not resolved_format:
+        raise ContractError(f"unsupported or ambiguous export extension: {path.suffix}")
+    policy = require_choice(
+        overwrite_policy,
+        "overwrite_policy",
+        _EXPORT_POLICIES,
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    requested_path = path
+    target_existed = requested_path.exists()
+    if policy == "error" and target_existed:
+        raise ContractError(
+            f"export target already exists: {requested_path}; "
+            "use overwrite_policy='versioned' or 'replace' explicitly"
+        )
+    final_path = (
+        _unique_export_path(requested_path, "__version")
+        if policy == "versioned" and requested_path.exists()
+        else requested_path
+    )
+    temporary_path = _temporary_export_path(final_path)
+    export_key = _reserve_export(document)
+    previous_alerts = bool(_safe_attr(app, "DisplayFileAlerts", True))
+    try:
+        app.DisplayFileAlerts = False
+        document.ExportData(str(temporary_path), resolved_format)
+        file_validation = _validate_export_file(temporary_path)
+        reimport_validation = _validate_export_reimport(
+            app,
+            document,
+            temporary_path,
+            resolved_format,
+            bool(verify_reimport),
+        )
+
+        if policy != "replace" and final_path.exists():
+            raise RuntimeError(
+                f"export target appeared while CATIA was exporting: {final_path}; "
+                f"validated temporary output was preserved at {temporary_path}"
+            )
+        if policy == "replace":
+            os.replace(temporary_path, final_path)
+        else:
+            temporary_path.rename(final_path)
+
+        final_validation = _validate_export_file(final_path)
+        return {
+            "document": document.Name,
+            "requested_path": str(requested_path),
+            "path": str(final_path),
+            "temporary_path": str(temporary_path),
+            "format": resolved_format,
+            "overwrite_policy": policy,
+            "replaced_existing": policy == "replace" and target_existed,
+            "exists": final_validation["exists"],
+            "size_bytes": final_validation["size_bytes"],
+            "pre_replace_size_bytes": file_validation["size_bytes"],
+            "reimport_validation": reimport_validation,
+            "display_file_alerts_previous_value": previous_alerts,
+            "display_file_alerts_restored": True,
+        }
+    finally:
+        try:
+            app.DisplayFileAlerts = previous_alerts
+        finally:
+            _release_export(export_key)
+
+
+def update_active(app: Any) -> dict[str, Any]:
+    document = active_document(app)
+    kind = document_kind(document)
+    if hasattr(document, "Part"):
+        document.Part.Update()
+    elif hasattr(document, "Product"):
+        document.Product.Update()
+    else:
+        raise RuntimeError(f"update is not implemented for {kind} documents")
+    return {"document": document.Name, "kind": kind, "updated": True}
+
+
+def _point2(value: Any, name: str) -> tuple[float, float]:
+    if not isinstance(value, (list, tuple)) or len(value) != 2:
+        raise ContractError(f"{name} must be [x, y]")
+    return require_finite(value[0], f"{name}[0]"), require_finite(value[1], f"{name}[1]")
+
+
+def _validate_entities(entities: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    if not isinstance(entities, list) or not entities:
+        raise ContractError("entities must be a non-empty list")
+    if len(entities) > 1000:
+        raise ContractError("a sketch is limited to 1000 requested entities")
+    validated: list[dict[str, Any]] = []
+    for index, entity in enumerate(entities):
+        if not isinstance(entity, dict):
+            raise ContractError(f"entities[{index}] must be an object")
+        kind = require_choice(entity.get("kind"), f"entities[{index}].kind", ("line", "circle", "rectangle", "polyline"))
+        if kind == "line":
+            validated.append({"kind": kind, "start": _point2(entity.get("start"), "start"), "end": _point2(entity.get("end"), "end")})
+        elif kind == "circle":
+            validated.append({"kind": kind, "center": _point2(entity.get("center"), "center"), "radius": require_positive(entity.get("radius"), "radius")})
+        elif kind == "rectangle":
+            validated.append({
+                "kind": kind,
+                "origin": _point2(entity.get("origin", [0, 0]), "origin"),
+                "width": require_positive(entity.get("width"), "width"),
+                "height": require_positive(entity.get("height"), "height"),
+            })
+        else:
+            points = entity.get("points")
+            if not isinstance(points, list) or len(points) < 2 or len(points) > 1000:
+                raise ContractError("polyline.points must contain 2..1000 points")
+            validated.append({
+                "kind": kind,
+                "points": [_point2(point, f"points[{point_index}]") for point_index, point in enumerate(points)],
+                "closed": bool(entity.get("closed", False)),
+            })
+    return validated
+
+
+def create_sketch(
+    app: Any,
+    name: str,
+    plane: str,
+    entities: list[dict[str, Any]],
+    body_name: str = "PartBody",
+) -> dict[str, Any]:
+    name = require_safe_name(name)
+    body_name = require_safe_name(body_name, "body_name")
+    validated = _validate_entities(entities)
+    document = active_part_document(app)
+    part = document.Part
+    body = _body(part, body_name)
+    sketch = body.Sketches.Add(_plane(part, plane))
+    sketch.Name = name
+    factory = sketch.OpenEdition()
+    created = 0
+    try:
+        for entity in validated:
+            kind = entity["kind"]
+            if kind == "line":
+                factory.CreateLine(*entity["start"], *entity["end"])
+                created += 1
+            elif kind == "circle":
+                factory.CreateClosedCircle(*entity["center"], entity["radius"])
+                created += 1
+            elif kind == "rectangle":
+                x, y = entity["origin"]
+                w, h = entity["width"], entity["height"]
+                points = ((x, y), (x + w, y), (x + w, y + h), (x, y + h), (x, y))
+                for start, end in zip(points, points[1:]):
+                    factory.CreateLine(*start, *end)
+                    created += 1
+            else:
+                points = list(entity["points"])
+                if entity["closed"]:
+                    points.append(points[0])
+                for start, end in zip(points, points[1:]):
+                    factory.CreateLine(*start, *end)
+                    created += 1
+    finally:
+        sketch.CloseEdition()
+    part.Update()
+    return {
+        "document": document.Name,
+        "body": body.Name,
+        "sketch": sketch.Name,
+        "plane": plane.lower(),
+        "created_geometry_count": created,
+    }
+
+
+def add_pad(app: Any, sketch_name: str, length_mm: float, name: str = "Pad", body_name: str = "PartBody") -> dict[str, Any]:
+    sketch_name = require_safe_name(sketch_name, "sketch_name")
+    name = require_safe_name(name)
+    length = require_positive(length_mm, "length_mm")
+    document = active_part_document(app)
+    part = document.Part
+    body = _body(part, body_name)
+    part.InWorkObject = body
+    feature = part.ShapeFactory.AddNewPad(_sketch(part, body_name, sketch_name), length)
+    feature.Name = name
+    part.Update()
+    return {"document": document.Name, "feature": feature.Name, "type": "Pad", "length_mm": length}
+
+
+def _body_volume(document: Any, part: Any, body: Any) -> tuple[float | None, str | None]:
+    try:
+        reference = part.CreateReferenceFromObject(body)
+        measurable = document.GetWorkbench("SPAWorkbench").GetMeasurable(reference)
+        volume_m3 = float(_safe_attr(measurable, "Volume", None))
+        if not math.isfinite(volume_m3) or volume_m3 < 0:
+            raise ValueError(f"invalid body volume: {volume_m3}")
+        return volume_m3 * 1_000_000_000.0, None
+    except Exception as exc:
+        return None, f"{type(exc).__name__}: {exc}"
+
+
+def add_pocket(
+    app: Any,
+    sketch_name: str,
+    length_mm: float,
+    name: str = "Pocket",
+    body_name: str = "PartBody",
+    reverse: bool = False,
+) -> dict[str, Any]:
+    sketch_name = require_safe_name(sketch_name, "sketch_name")
+    name = require_safe_name(name)
+    length = require_positive(length_mm, "length_mm")
+    document = active_part_document(app)
+    part = document.Part
+    body = _body(part, body_name)
+    part.InWorkObject = body
+    volume_before_mm3, volume_before_error = _body_volume(document, part, body)
+    feature = part.ShapeFactory.AddNewPocket(_sketch(part, body_name, sketch_name), length)
+    feature.Name = name
+    direction_before = int(_safe_attr(feature, "DirectionOrientation", 0))
+    if reverse:
+        if direction_before not in (0, 1):
+            raise RuntimeError(f"unexpected pocket DirectionOrientation: {direction_before}")
+        feature.DirectionOrientation = 1 - direction_before
+    part.Update()
+    direction_after = int(_safe_attr(feature, "DirectionOrientation", direction_before))
+    volume_after_mm3, volume_after_error = _body_volume(document, part, body)
+
+    material_removed: bool | None = None
+    removed_volume: float | None = None
+    status = "created_unverified"
+    warning = None
+    if volume_before_mm3 is not None and volume_after_mm3 is not None:
+        removed_volume = volume_before_mm3 - volume_after_mm3
+        tolerance = max(1e-6, abs(volume_before_mm3) * 1e-9)
+        material_removed = removed_volume > tolerance
+        status = "material_removed" if material_removed else "no_material_removed"
+        if not material_removed:
+            warning = (
+                "Pocket feature was created but measurable body volume did not decrease; "
+                "check the sketch support/direction and retry with reverse=True when appropriate"
+            )
+
+    result = {
+        "document": document.Name,
+        "feature": feature.Name,
+        "type": "Pocket",
+        "length_mm": length,
+        "reverse": bool(reverse),
+        "direction_orientation_before": direction_before,
+        "direction_orientation": direction_after,
+        "status": status,
+        "material_removed": material_removed,
+        "volume_before_mm3": volume_before_mm3,
+        "volume_after_mm3": volume_after_mm3,
+        "removed_volume_mm3": removed_volume,
+        "volume_unit": "mm^3",
+    }
+    measurement_errors = [error for error in (volume_before_error, volume_after_error) if error]
+    if measurement_errors:
+        result["measurement_errors"] = measurement_errors
+    if warning:
+        result["warning"] = warning
+    return result
+
+
+def _validated_edge_indices(edge_indices: list[int]) -> list[int]:
+    if not isinstance(edge_indices, list) or not 1 <= len(edge_indices) <= 100:
+        raise ContractError("edge_indices must contain 1..100 one-based edge indices")
+    result = [
+        require_index(value, f"edge_indices[{index}]")
+        for index, value in enumerate(edge_indices)
+    ]
+    if len(set(result)) != len(result):
+        raise ContractError("edge_indices must not contain duplicates")
+    return result
+
+
+def _edge_scope(part: Any, body_name: str, source_feature_name: str | None) -> tuple[Any, Any, str, str]:
+    body = _body(part, body_name)
+    if source_feature_name is None:
+        return body, body, "body_current_solid", str(_safe_attr(body, "Name", body_name))
+    feature = _shape(body, source_feature_name)
+    return body, feature, "feature", str(_safe_attr(feature, "Name", source_feature_name))
+
+
+def _selected_edge_reference(part: Any, selected: Any) -> Any:
+    reference = _safe_property(selected, "Reference", None)
+    if reference is not None:
+        return reference
+    value = _safe_property(selected, "Value", None)
+    if value is None:
+        raise RuntimeError("CATIA edge search returned an item without a usable Reference or Value")
+    return part.CreateReferenceFromObject(value)
+
+
+def _populate_edge_selection(selection: Any, scope: Any) -> tuple[str, int, list[Any]]:
+    rejected_queries: list[str] = []
+    for query in _EDGE_SEARCH_QUERIES:
+        selection.Clear()
+        selection.Add(scope)
+        try:
+            selection.Search(query)
+        except Exception:
+            rejected_queries.append(query)
+            continue
+        raw_count = int(selection.Count2)
+        solid_edges = []
+        for raw_index in range(1, raw_count + 1):
+            selected = selection.Item2(raw_index)
+            selected_type = str(_safe_attr(selected, "Type", "")).casefold()
+            if "monodim" not in selected_type:
+                solid_edges.append(selected)
+        if solid_edges:
+            return query, raw_count, solid_edges
+    if len(rejected_queries) == len(_EDGE_SEARCH_QUERIES):
+        raise RuntimeError(
+            "CATIA rejected all supported topological-edge search queries: "
+            + ", ".join(rejected_queries)
+        )
+    raise RuntimeError(
+        "CATIA found no three-dimensional topological edges in the requested body or feature scope"
+    )
+
+
+def _search_scoped_edges(
+    document: Any,
+    part: Any,
+    scope: Any,
+    requested_indices: list[int],
+) -> tuple[str, int, int, list[dict[str, Any]]]:
+    selection = document.Selection
+    selection.Clear()
+    try:
+        query_used, raw_count, selected_edges = _populate_edge_selection(selection, scope)
+        matched = len(selected_edges)
+        highest = max(requested_indices)
+        if highest > matched:
+            raise ContractError(
+                f"edge index {highest} exceeds CATIA scoped edge count: {matched}"
+            )
+
+        edges: list[dict[str, Any]] = []
+        for index in requested_indices:
+            selected = selected_edges[index - 1]
+            reference = _selected_edge_reference(part, selected)
+            edges.append(
+                {
+                    "index": index,
+                    "name": str(_safe_attr(selected, "Name", "")),
+                    "type": str(_safe_attr(selected, "Type", "")),
+                    "reference_display_name": str(_safe_attr(reference, "DisplayName", "")),
+                    "reference": reference,
+                }
+            )
+        return query_used, raw_count, matched, edges
+    finally:
+        selection.Clear()
+
+
+def _edge_measurement(document: Any, reference: Any) -> dict[str, Any]:
+    measurable = document.GetWorkbench("SPAWorkbench").GetMeasurable(reference)
+    result: dict[str, Any] = {}
+    for source, target in (
+        ("GeometryName", "geometry_type"),
+        ("Length", "length"),
+        ("Radius", "radius"),
+    ):
+        try:
+            value = getattr(measurable, source)
+            result[target] = value() if callable(value) else value
+        except Exception:
+            pass
+    return result
+
+
+def inspect_edges(
+    app: Any,
+    body_name: str = "PartBody",
+    source_feature_name: str | None = None,
+    limit: int = 200,
+) -> dict[str, Any]:
+    if not isinstance(limit, int) or isinstance(limit, bool) or not 1 <= limit <= 1000:
+        raise ContractError("limit must be an integer between 1 and 1000")
+    document = active_part_document(app)
+    part = document.Part
+    body, scope, scope_kind, scope_name = _edge_scope(part, body_name, source_feature_name)
+
+    selection = document.Selection
+    selection.Clear()
+    try:
+        query_used, raw_count, selected_edges = _populate_edge_selection(selection, scope)
+        matched = len(selected_edges)
+
+        edges: list[dict[str, Any]] = []
+        for index in range(1, min(matched, limit) + 1):
+            selected = selected_edges[index - 1]
+            reference = _selected_edge_reference(part, selected)
+            row: dict[str, Any] = {
+                "index": index,
+                "name": str(_safe_attr(selected, "Name", "")),
+                "type": str(_safe_attr(selected, "Type", "")),
+                "reference_display_name": str(_safe_attr(reference, "DisplayName", "")),
+            }
+            try:
+                row["measurement"] = _edge_measurement(document, reference)
+            except Exception as exc:
+                row["measurement_error"] = f"{type(exc).__name__}: {exc}"
+            edges.append(row)
+    finally:
+        selection.Clear()
+
+    return {
+        "document": document.Name,
+        "body": str(_safe_attr(body, "Name", body_name)),
+        "scope": {"kind": scope_kind, "name": scope_name},
+        "search_query": query_used,
+        "raw_search_result_count": raw_count,
+        "matched_edge_count": matched,
+        "filtered_non_solid_edge_count": raw_count - matched,
+        "edges": edges,
+        "truncated": matched > len(edges),
+        "measurement_unit_basis": "CATIA document units",
+        "topology_warning": (
+            "Edge indices are a snapshot of the current scoped topology. Re-run "
+            "catia_inspect_edges after any upstream geometry change."
+        ),
+    }
+
+
+def add_edge_fillet(
+    app: Any,
+    edge_indices: list[int],
+    radius_mm: float,
+    name: str = "EdgeFillet",
+    body_name: str = "PartBody",
+    source_feature_name: str | None = None,
+    propagation: str = "tangency",
+) -> dict[str, Any]:
+    indices = _validated_edge_indices(edge_indices)
+    radius = require_positive(radius_mm, "radius_mm")
+    feature_name = require_safe_name(name)
+    propagation_name = require_choice(
+        propagation, "propagation", tuple(_FILLET_PROPAGATION_CODES)
+    )
+    propagation_code = _FILLET_PROPAGATION_CODES[propagation_name]
+
+    document = active_part_document(app)
+    part = document.Part
+    body, scope, scope_kind, scope_name = _edge_scope(part, body_name, source_feature_name)
+    query_used, raw_count, matched, edges = _search_scoped_edges(
+        document, part, scope, indices
+    )
+    references = [edge["reference"] for edge in edges]
+    volume_before_mm3, volume_before_error = _body_volume(document, part, body)
+
+    shape_factory = part.ShapeFactory
+    create = getattr(shape_factory, "AddNewEdgeFilletWithConstantRadius", None)
+    if not callable(create):
+        raise RuntimeError(
+            "installed CATIA release does not expose AddNewEdgeFilletWithConstantRadius"
+        )
+
+    part.InWorkObject = body
+    feature = create(references[0], propagation_code, radius)
+    feature.Name = feature_name
+    for reference in references[1:]:
+        feature.AddObjectToFillet(reference)
+    feature.EdgePropagation = propagation_code
+    part.UpdateObject(feature)
+    part.Update()
+
+    radius_object = _safe_property(feature, "Radius", None)
+    radius_readback = _safe_attr(radius_object, "Value", None)
+    if isinstance(radius_readback, (int, float)) and not isinstance(radius_readback, bool):
+        radius_readback = float(radius_readback)
+    else:
+        radius_readback = None
+    objects = _safe_property(feature, "ObjectsToFillet", None)
+    objects_to_fillet_count = _safe_attr(objects, "Count", None)
+    if isinstance(objects_to_fillet_count, (int, float)) and not isinstance(objects_to_fillet_count, bool):
+        objects_to_fillet_count = int(objects_to_fillet_count)
+    else:
+        objects_to_fillet_count = None
+    propagation_readback = _safe_attr(feature, "EdgePropagation", None)
+    if isinstance(propagation_readback, (int, float)) and not isinstance(propagation_readback, bool):
+        propagation_readback = int(propagation_readback)
+    else:
+        propagation_readback = None
+
+    volume_after_mm3, volume_after_error = _body_volume(document, part, body)
+    volume_change_mm3: float | None = None
+    body_volume_changed: bool | None = None
+    if volume_before_mm3 is not None and volume_after_mm3 is not None:
+        volume_change_mm3 = volume_after_mm3 - volume_before_mm3
+        tolerance = max(1e-6, abs(volume_before_mm3) * 1e-9)
+        body_volume_changed = abs(volume_change_mm3) > tolerance
+
+    warnings: list[str] = []
+    if volume_before_error or volume_after_error:
+        warnings.append("body volume measurement was unavailable; inspect the native feature result")
+    elif body_volume_changed is False:
+        warnings.append("native feature updated but measurable body volume did not change")
+    if radius_readback is None:
+        warnings.append("fillet radius could not be read back from the native feature")
+    if objects_to_fillet_count is None:
+        warnings.append("ObjectsToFillet count could not be read back from the native feature")
+
+    public_edges = [
+        {key: value for key, value in edge.items() if key != "reference"}
+        for edge in edges
+    ]
+    return {
+        "document": document.Name,
+        "body": str(_safe_attr(body, "Name", body_name)),
+        "feature": str(_safe_attr(feature, "Name", feature_name)),
+        "type": "ConstRadEdgeFillet",
+        "radius_mm": radius,
+        "propagation": propagation_name,
+        "propagation_code": propagation_code,
+        "scope": {"kind": scope_kind, "name": scope_name},
+        "search_query": query_used,
+        "raw_search_result_count": raw_count,
+        "matched_edge_count": matched,
+        "filtered_non_solid_edge_count": raw_count - matched,
+        "selected_edges": public_edges,
+        "validation": {
+            "part_update_succeeded": True,
+            "radius_readback_mm": radius_readback,
+            "radius_matches_request": (
+                math.isclose(radius_readback, radius, rel_tol=0.0, abs_tol=1e-9)
+                if radius_readback is not None
+                else None
+            ),
+            "propagation_readback_code": propagation_readback,
+            "propagation_matches_request": (
+                propagation_readback == propagation_code
+                if propagation_readback is not None
+                else None
+            ),
+            "objects_to_fillet_count": objects_to_fillet_count,
+            "objects_to_fillet_matches_request": (
+                objects_to_fillet_count == len(indices)
+                if objects_to_fillet_count is not None
+                else None
+            ),
+            "volume_before_mm3": volume_before_mm3,
+            "volume_after_mm3": volume_after_mm3,
+            "volume_change_mm3": volume_change_mm3,
+            "body_volume_changed": body_volume_changed,
+            "volume_before_error": volume_before_error,
+            "volume_after_error": volume_after_error,
+        },
+        "status": "created_and_updated",
+        "warnings": warnings,
+        "topology_warning": (
+            "Edge indices are valid only for the inspected topology state; reacquire "
+            "them after upstream geometry changes."
+        ),
+    }
+
+
+def create_parametric_part(app: Any, part_type: str, parameters: dict[str, Any], title: str) -> dict[str, Any]:
+    kind = require_choice(part_type, "part_type", ("block", "cylinder", "tube"))
+    create_part(app, title)
+    feature_validation: dict[str, Any] = {}
+    if kind == "block":
+        length = require_positive(parameters.get("length_mm"), "length_mm")
+        width = require_positive(parameters.get("width_mm"), "width_mm")
+        height = require_positive(parameters.get("height_mm"), "height_mm")
+        create_sketch(app, "BaseSketch", "xy", [{"kind": "rectangle", "origin": [-length / 2, -width / 2], "width": length, "height": width}])
+        add_pad(app, "BaseSketch", height, "BlockPad")
+    else:
+        diameter = require_positive(parameters.get("diameter_mm"), "diameter_mm")
+        height = require_positive(parameters.get("height_mm"), "height_mm")
+        create_sketch(app, "BaseSketch", "xy", [{"kind": "circle", "center": [0, 0], "radius": diameter / 2}])
+        add_pad(app, "BaseSketch", height, "CylinderPad")
+        if kind == "tube":
+            inner = require_positive(parameters.get("inner_diameter_mm"), "inner_diameter_mm")
+            if inner >= diameter:
+                raise ContractError("inner_diameter_mm must be smaller than diameter_mm")
+            create_sketch(app, "BoreSketch", "xy", [{"kind": "circle", "center": [0, 0], "radius": inner / 2}])
+            bore = add_pocket(app, "BoreSketch", height, "BorePocket", reverse=True)
+            feature_validation["bore_pocket"] = bore
+            if bore.get("material_removed") is False:
+                raise RuntimeError("tube bore pocket was created but did not remove material")
+    result = {"document": active_document(app).Name, "part_type": kind, "parameters": parameters}
+    if feature_validation:
+        result["feature_validation"] = feature_validation
+    return result
+
+
+def add_components(app: Any, paths: list[Path]) -> dict[str, Any]:
+    document = active_document(app)
+    if not hasattr(document, "Product"):
+        raise RuntimeError("active document is not a CATProduct")
+    if not paths or len(paths) > 200:
+        raise ContractError("paths must contain 1..200 component files")
+    products = document.Product.Products
+    values = tuple(str(path) for path in paths)
+    before = int(products.Count)
+    errors: list[str] = []
+
+    # Dynamic pywin32 dispatch normally marshals a Python tuple correctly. Some
+    # generated CATIA wrappers instead require an explicitly typed SAFEARRAY, so
+    # keep both native array variants before falling back to one-by-one insertion.
+    attempts: list[Any] = [values]
+    try:
+        import pythoncom  # type: ignore
+        from win32com.client import VARIANT  # type: ignore
+
+        attempts.extend(
+            [
+                VARIANT(pythoncom.VT_ARRAY | pythoncom.VT_VARIANT, values),
+                VARIANT(pythoncom.VT_ARRAY | pythoncom.VT_BSTR, values),
+            ]
+        )
+    except ImportError:
+        pass
+
+    for candidate in attempts:
+        try:
+            products.AddComponentsFromFiles(candidate, "All")
+            break
+        except Exception as exc:
+            errors.append(f"AddComponentsFromFiles: {exc}")
+            # Do not retry through another route if CATIA inserted anything
+            # before reporting an error; that could duplicate components.
+            if int(products.Count) > before:
+                break
+    else:
+        for path in paths:
+            source = app.Documents.Open(str(path))
+            try:
+                products.AddComponent(source.Product)
+            except Exception as add_component_error:
+                try:
+                    products.AddExternalComponent(source)
+                except Exception as external_error:
+                    raise RuntimeError(
+                        "CATIA rejected all component insertion routes: "
+                        + " | ".join(errors + [str(add_component_error), str(external_error)])
+                    ) from external_error
+
+    document.Product.Update()
+    return {"document": document.Name, "added": list(values), "component_count": int(products.Count)}
+
+
+def list_materials(app: Any, catalog_path: Path, family_name: str | None = None, limit: int = 500) -> dict[str, Any]:
+    try:
+        original = active_document(app)
+    except Exception:
+        original = None
+    catalog = app.Documents.Open(str(catalog_path))
+    try:
+        families = []
+        for family in _collection_items(catalog.Families, limit):
+            current_name = str(_safe_attr(family, "Name", ""))
+            if family_name and current_name.casefold() != family_name.strip().casefold():
+                continue
+            materials = [
+                str(_safe_attr(material, "Name", ""))
+                for material in _collection_items(family.Materials, limit)
+            ]
+            families.append({"name": current_name, "materials": materials})
+        return {"catalog": str(catalog_path), "families": families}
+    finally:
+        catalog.Close()
+        if original is not None:
+            original.Activate()
+
+
+def apply_material(
+    app: Any,
+    catalog_path: Path,
+    family_name: str,
+    material_name: str,
+    link_mode: int = 1,
+) -> dict[str, Any]:
+    target = active_document(app)
+    family_text = require_text(family_name, "family_name", max_length=256)
+    material_text = require_text(material_name, "material_name", max_length=256)
+    if link_mode not in (0, 1):
+        raise ContractError("link_mode must be 0 (copy) or 1 (linked)")
+    catalog = app.Documents.Open(str(catalog_path))
+    try:
+        family = catalog.Families.Item(family_text)
+        material = family.Materials.Item(material_text)
+        if hasattr(target, "Part"):
+            part = target.Part
+            manager = part.GetItem("CATMatManagerVBExt")
+            manager.ApplyMaterialOnPart(part, material, link_mode)
+            part.Update()
+            target_kind = "Part"
+        elif hasattr(target, "Product"):
+            product = target.Product
+            manager = product.GetItem("CATMatManagerVBExt")
+            manager.ApplyMaterialOnProduct(product, material, link_mode)
+            product.Update()
+            target_kind = "Product"
+        else:
+            raise RuntimeError("active document is not a CATPart or CATProduct")
+    finally:
+        catalog.Close()
+        target.Activate()
+    return {
+        "document": target.Name,
+        "kind": target_kind,
+        "catalog": str(catalog_path),
+        "family": family_text,
+        "material": material_text,
+        "link_mode": link_mode,
+    }
+
+
+def list_parameters(app: Any, limit: int = 200) -> dict[str, Any]:
+    document = active_part_document(app)
+    parameters = document.Part.Parameters
+    rows = []
+    for parameter in _collection_items(parameters, max(1, min(limit, 1000))):
+        rows.append({
+            "name": str(_safe_attr(parameter, "Name", "")),
+            "value": str(_safe_attr(parameter, "ValueAsString", _safe_attr(parameter, "Value", ""))),
+        })
+    return {"document": document.Name, "count": int(parameters.Count), "parameters": rows, "truncated": int(parameters.Count) > len(rows)}
+
+
+def set_parameter(app: Any, parameter_name: str, value: str, update: bool = True) -> dict[str, Any]:
+    document = active_part_document(app)
+    name = require_text(parameter_name, "parameter_name", max_length=512)
+    expression = require_text(value, "value", max_length=128)
+    try:
+        parameter = document.Part.Parameters.Item(name)
+    except Exception as exc:
+        raise RuntimeError(f"parameter not found: {name}") from exc
+    parameter.ValuateFromString(expression)
+    if update:
+        document.Part.Update()
+    return {
+        "document": document.Name,
+        "parameter": name,
+        "value": str(_safe_attr(parameter, "ValueAsString", expression)),
+        "updated": update,
+    }
+
+
+def inspect_active(app: Any, include_parameters: bool = False, limit: int = 200) -> dict[str, Any]:
+    document = active_document(app)
+    result: dict[str, Any] = {
+        "document": document.Name,
+        "kind": document_kind(document),
+        "full_name": str(_safe_attr(document, "FullName", "")),
+        "saved": bool(_safe_attr(document, "Saved", False)),
+        "read_only": bool(_safe_attr(document, "ReadOnly", False)),
+    }
+    if hasattr(document, "Part"):
+        part = document.Part
+        bodies = []
+        for body in _collection_items(part.Bodies, limit):
+            sketches = [str(_safe_attr(item, "Name", "")) for item in _collection_items(body.Sketches, limit)]
+            shapes = [
+                {"name": str(_safe_attr(item, "Name", "")), "type": str(_safe_attr(item, "Type", type(item).__name__))}
+                for item in _collection_items(body.Shapes, limit)
+            ]
+            bodies.append({"name": body.Name, "sketches": sketches, "shapes": shapes})
+
+        def inspect_hybrid_body(hybrid_body: Any) -> dict[str, Any]:
+            shapes = [
+                {
+                    "name": str(_safe_attr(item, "Name", "")),
+                    "type": str(_safe_attr(item, "Type", type(item).__name__)),
+                }
+                for item in _collection_items(hybrid_body.HybridShapes, limit)
+            ]
+            children = [
+                inspect_hybrid_body(item)
+                for item in _collection_items(hybrid_body.HybridBodies, limit)
+            ]
+            return {
+                "name": str(_safe_attr(hybrid_body, "Name", "")),
+                "shapes": shapes,
+                "children": children,
+            }
+
+        hybrid_bodies = [
+            inspect_hybrid_body(item)
+            for item in _collection_items(part.HybridBodies, limit)
+        ]
+        result["part_number"] = str(_safe_attr(part, "PartNumber", ""))
+        result["bodies"] = bodies
+        result["hybrid_bodies"] = hybrid_bodies
+        if include_parameters:
+            result["parameter_inventory"] = list_parameters(app, limit)
+    elif hasattr(document, "Product"):
+        product = document.Product
+        result["part_number"] = str(_safe_attr(product, "PartNumber", ""))
+        result["components"] = [
+            {"name": str(_safe_attr(item, "Name", "")), "part_number": str(_safe_attr(item, "PartNumber", ""))}
+            for item in _collection_items(product.Products, limit)
+        ]
+    return result
+
+
+def capture_view(app: Any, path: Path) -> dict[str, Any]:
+    if path.suffix.casefold() != ".bmp":
+        raise ContractError("CATIA Automation capture is intentionally restricted to the stable BMP format")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    viewer = app.ActiveWindow.ActiveViewer
+    viewer.Reframe()
+    viewer.CaptureToFile(CAT_CAPTURE_FORMAT_BMP, str(path))
+    if not path.is_file():
+        raise RuntimeError(f"CATIA did not create the requested capture: {path}")
+    size_bytes = path.stat().st_size
+    with path.open("rb") as handle:
+        magic = handle.read(2)
+    if magic != b"BM":
+        raise RuntimeError(
+            "CATIA CaptureToFile returned a non-BMP payload "
+            f"(format={CAT_CAPTURE_FORMAT_BMP}, magic={magic.hex() or 'empty'}, size_bytes={size_bytes})"
+        )
+    return {
+        "path": str(path),
+        "exists": True,
+        "size_bytes": size_bytes,
+        "format": "BMP",
+        "format_code": CAT_CAPTURE_FORMAT_BMP,
+        "is_image": True,
+    }
+
+
+def close_active(
+    app: Any,
+    save: bool = False,
+    discard_unsaved: bool = False,
+    expected_document_name: str | None = None,
+) -> dict[str, Any]:
+    document = active_document(app)
+    if expected_document_name:
+        expected = require_text(expected_document_name, "expected_document_name", max_length=512)
+        if str(document.Name).casefold() != expected.casefold():
+            raise ContractError(
+                f"refusing to close active document {document.Name}; expected {expected}"
+            )
+    was_saved = bool(_safe_attr(document, "Saved", False))
+    if not was_saved and not save and not discard_unsaved:
+        raise ContractError("active document has unsaved changes; set save=true or discard_unsaved=true")
+    name = document.Name
+    if save:
+        document.Save()
+    previous_alerts = bool(_safe_attr(app, "DisplayFileAlerts", True))
+    if discard_unsaved:
+        app.DisplayFileAlerts = False
+    try:
+        document.Close()
+    finally:
+        app.DisplayFileAlerts = previous_alerts
+
+    # Some releases (for example V5R21) silently ignore Close() on a document
+    # still referenced by an open CATProduct: the call returns without error
+    # but the document stays in the collection. Verify the actual state and
+    # report the truth instead of a fabricated success.
+    close_verified: bool | None = None
+    try:
+        still_open = any(
+            str(_safe_attr(app.Documents.Item(index), "Name", "")).casefold()
+            == str(name).casefold()
+            for index in range(1, int(app.Documents.Count) + 1)
+        )
+        close_verified = not still_open
+    except Exception:
+        close_verified = None
+    if close_verified is False:
+        raise RuntimeError(
+            f"CATIA did not close {name} although Close() returned without error. "
+            "On some releases (for example V5R21) a document referenced by an open "
+            "CATProduct cannot be closed before its assemblies. Close the referencing "
+            "assembly first, or keep the part open and retry later."
+        )
+    return {
+        "document": name,
+        "closed": True,
+        "saved_before_close": save or was_saved,
+        "discarded": discard_unsaved and not was_saved,
+        "close_verified": close_verified,
+    }
+

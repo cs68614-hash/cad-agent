@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+.venv/
+workspace/
+*.sqlite3*
+*.egg-info/
+build/
+dist/
+.env
+*.CATPart
+*.CATProduct
+*.CATAnalysis
+*.CATDrawing
